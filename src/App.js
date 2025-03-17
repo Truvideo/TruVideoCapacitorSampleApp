@@ -7,9 +7,24 @@ function App() {
   const [value, setValue] = useState();
   const [value2, setValue2] = useState();
   const [isAuthenticationExpire, setIsAuthenticationExpire] = useState(true);
+  const [testIosPlugin, setTestIosPlugin]  = useState(false); 
   useEffect(() => {
     // testPlugin();
+    // testPluginIos();
   })
+
+    async function testPluginIos() {
+      try {
+        const result = await Authentication.echo({value : "Hello ISO "}); 
+        setTestIosPlugin(result);
+        console.log("Plugin Response on iOS:", result);
+      } catch (error) {
+        console.error("Error on iOS:", error);
+      }
+    }
+
+
+
   // async function testPlugin() {
   //   let response;
   //   try {
@@ -105,8 +120,9 @@ function App() {
       <h2> {value}</h2>
       <h2> {value2}</h2>
       <h2> {isAuthenticationExpire}</h2>
-
+      
       <button onClick={() => auth()}>Click to Auth </button>
+      <h2>Hii {testIosPlugin}</h2>
     </div>
   );
 }
