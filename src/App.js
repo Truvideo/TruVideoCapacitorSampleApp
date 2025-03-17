@@ -8,10 +8,6 @@ function App() {
   const [value2, setValue2] = useState();
   const [isAuthenticationExpire, setIsAuthenticationExpire] = useState(true);
   const [testIosPlugin, setTestIosPlugin]  = useState(false); 
-  useEffect(() => {
-    // testPlugin();
-    // testPluginIos();
-  })
 
     async function testPluginIos() {
       try {
@@ -22,7 +18,7 @@ function App() {
         console.error("Error on iOS:", error);
       }
     }
-
+    // testPluginIos();
 
 
   // async function testPlugin() {
@@ -122,7 +118,7 @@ function App() {
       <h2> {isAuthenticationExpire}</h2>
       
       <button onClick={() => auth()}>Click to Auth </button>
-      <h2>Hii {testIosPlugin}</h2>
+      <h2>Hii </h2>
     </div>
   );
 }
