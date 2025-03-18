@@ -5,6 +5,7 @@ import { Authentication } from 'truvideo-capacitor-coremodule-sdk';
 
 function App() {
   const [value, setValue] = useState();
+  const [value1, setValue1] = useState();
   const [value2, setValue2] = useState();
   const [isAuthenticationExpire, setIsAuthenticationExpire] = useState(true);
   const [testIosPlugin, setTestIosPlugin]  = useState(false); 
@@ -34,29 +35,17 @@ function App() {
   //   return response.value
   // }
 
-  // async function testPluginTrueVideo() {
-  //   try {
-  //     const result = await Authentication.echo({ value: "Hello from TruVideo Plugin!" });
-  //     console.log("✅ Plugin Response:", result);
-  //   } catch (error) {
-  //     console.error("❌ Plugin Error:", error);
-  //   }
-  // }
-  // testPluginTrueVideo(); 
 
-
-  // async function isAuthenticated() {
-  //   let response;
-  //   try {
-  //     response = await Authentication.isAuthenticated();
-  //     setValue2(response.isAuthenticated);
-  //     console.log("isAuthenticated Response:", response);
-  //   } catch (error) {
-  //     setValue(error);
-  //     console.error("Error in checking isAuthenticated :", error);
-  //   }
-  //   return response.isAuthenticated
-  // }
+  async function isUserAuthenticated() {
+    let response;
+    try {
+      response = await Authentication.isAuthenticated();
+      console.log("isAuthenticated Response:", response);
+    } catch (error) {
+      console.error("Error in checking isAuthenticated :", error);
+    }
+    return response.isAuthenticated
+  }
 
   // async function isAuthenticationExpired() {
   //   let response;
@@ -88,7 +77,7 @@ function App() {
         secretKey: secretKey,
         payload: pay
       });
-      setValue2(signature.signature);
+      setValue1(signature.signature);
       const externalId = "";
       // Authenticate user
       if (!isAuth.isAuthenticated || isAuthExpired.isAuthenticationExpired) {
@@ -111,10 +100,16 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className="AFpp">
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      
       <h1> Hello Devs </h1>
       <h2> {value}</h2>
       <h2> {value2}</h2>
+       <h2> {value1 && "Token  " + value1}</h2>
       <h2> {isAuthenticationExpire}</h2>
       
       <button onClick={() => auth()}>Click to Auth </button>
