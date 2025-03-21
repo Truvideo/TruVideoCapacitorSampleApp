@@ -15,7 +15,8 @@ def capacitor_pods
   pod 'CapacitorHaptics', :path => '../../node_modules/@capacitor/haptics'
   pod 'CapacitorKeyboard', :path => '../../node_modules/@capacitor/keyboard'
   pod 'CapacitorStatusBar', :path => '../../node_modules/@capacitor/status-bar'
-  pod 'TruvideoCapacitorCoremoduleSdk', :path => '../../node_modules/truvideo-capacitor-coremodule-sdk'
+  pod 'TruvideoCapacitorCameraSdk', :path => '../../node_modules/truvideo-capacitor-camera-sdk'
+  pod 'TruvideoCapacitorCoreSdk', :path => '../../node_modules/truvideo-capacitor-core-sdk'
 end
 
 target 'App' do

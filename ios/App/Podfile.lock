@@ -10,6 +10,8 @@ PODS:
     - Capacitor
   - CapacitorStatusBar (7.0.0):
     - Capacitor
+  - TruvideoCapacitorCameraSdk (0.0.1):
+    - Capacitor
   - TruvideoCapacitorCoremoduleSdk (0.0.1):
     - Capacitor
 
@@ -45,8 +47,9 @@ SPEC CHECKSUMS:
   CapacitorHaptics: 1fba3e460e7614349c6d5f868b1fccdc5c87b66d
   CapacitorKeyboard: 2c26c6fccde35023c579fc37d4cae6326d5e6343
   CapacitorStatusBar: 438e90beeeefa8276b24e6c5991cb02dd13e51bf
+  TruvideoCapacitorCameraSdk: 666ad439633942c65e6d04d5aa6f7b5b41b43aa2
   TruvideoCapacitorCoremoduleSdk: 35e932d778b7576bd0eaa83513533b5d9fb13a09
 
-PODFILE CHECKSUM: 65a8ff478c5fcb0ff118093f7e2fd50a9b0f3d4c
+PODFILE CHECKSUM: edb787fcfc369870493276bad68858b55886dc41
 
 COCOAPODS: 1.16.2
