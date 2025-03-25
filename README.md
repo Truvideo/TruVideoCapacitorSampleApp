@@ -1,1 +1,1 @@
-# TruVideoCapacitorSampleApp
+    # TruVideoCapacitorSampleApp

@@ -22,6 +22,7 @@ DEPENDENCIES:
   - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
   - "CapacitorKeyboard (from `../../node_modules/@capacitor/keyboard`)"
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
+  - TruvideoCapacitorCameraSdk (from `../../node_modules/truvideo-capacitor-camera-sdk`)
   - TruvideoCapacitorCoremoduleSdk (from `../../node_modules/truvideo-capacitor-coremodule-sdk`)
 
 EXTERNAL SOURCES:
@@ -37,6 +38,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/keyboard"
   CapacitorStatusBar:
     :path: "../../node_modules/@capacitor/status-bar"
+  TruvideoCapacitorCameraSdk:
+    :path: "../../node_modules/truvideo-capacitor-camera-sdk"
   TruvideoCapacitorCoremoduleSdk:
     :path: "../../node_modules/truvideo-capacitor-coremodule-sdk"
 
@@ -47,9 +50,9 @@ SPEC CHECKSUMS:
   CapacitorHaptics: 1fba3e460e7614349c6d5f868b1fccdc5c87b66d
   CapacitorKeyboard: 2c26c6fccde35023c579fc37d4cae6326d5e6343
   CapacitorStatusBar: 438e90beeeefa8276b24e6c5991cb02dd13e51bf
-  TruvideoCapacitorCameraSdk: 666ad439633942c65e6d04d5aa6f7b5b41b43aa2
+  TruvideoCapacitorCameraSdk: ce9b590013fd933fae0b7a69e37e684ad7eafde8
   TruvideoCapacitorCoremoduleSdk: 35e932d778b7576bd0eaa83513533b5d9fb13a09
 
-PODFILE CHECKSUM: edb787fcfc369870493276bad68858b55886dc41
+PODFILE CHECKSUM: a8dc183b719c12e13f49a4ad46d5637d56c55253
 
 COCOAPODS: 1.16.2

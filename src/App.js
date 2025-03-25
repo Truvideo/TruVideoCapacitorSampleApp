@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import { TruvideoSdkCamera } from 'truvideo-capacitor-camera-sdk';
-import { Authentication } from 'truvideo-capacitor-core-sdk';
+// import { Authentication } from 'truvideo-capacitor-core-sdk';
 // import { TruvideoSdkCamera } from 'truvideo-capacitor-camera-sdk'
 
 function App() {
@@ -70,61 +70,89 @@ function App() {
   //   return response.isAuthenticationExpired
   // }
 
-  async function auth() {
-    try {
-      const isAuth = await Authentication.isAuthenticated();
-      console.log('isAuth', isAuth.authenticate);
-      // Check if authentication token has expired
-      const isAuthExpired = await Authentication.isAuthenticationExpired();
-      console.log('isAuthExpired', isAuthExpired.isAuthenticationExpired);
-      //generate payload for authentication
-      const payload = await Authentication.generatePayload();
-      const pay = String(payload.generatePayload);
-      const apiKey = "EPhPPsbv7e";
-      const secretKey = "9lHCnkfeLl";
+  // async function auth() {
+  //   try {
+  //     const isAuth = await Authentication.isAuthenticated();
+  //     console.log('isAuth', isAuth.authenticate);
+  //     // Check if authentication token has expired
+  //     const isAuthExpired = await Authentication.isAuthenticationExpired();
+  //     console.log('isAuthExpired', isAuthExpired.isAuthenticationExpired);
+  //     //generate payload for authentication
+  //     const payload = await Authentication.generatePayload();
+  //     const pay = String(payload.generatePayload);
+  //     const apiKey = "EPhPPsbv7e";
+  //     const secretKey = "9lHCnkfeLl";
 
-      const signature = await Authentication.toSha256String({
-        secretKey: secretKey,
-        payload: pay
-      });
-      setValue1(signature.signature);
-      const externalId = "";
-      // Authenticate user
-      if (!isAuth.isAuthenticated || isAuthExpired.isAuthenticationExpired) {
-        await Authentication.authenticate({
-          apiKey: apiKey,
-          payload: pay,
-          signature: signature.signature,
-          externalId: externalId
-        });
-      }
-      // If user is authenticated successfully
-      const initAuth = await Authentication.initAuthentication();
-      setValue2("Auth success");
-      console.log('initAuth', initAuth.initAuthentication);
-    } catch (error) {
-      setValue2("Auth fail");
-      console.log('error', error);
-    }
+  //     const signature = await Authentication.toSha256String({
+  //       secretKey: secretKey,
+  //       payload: pay
+  //     });
+  //     setValue1(signature.signature);
+  //     const externalId = "";
+  //     // Authenticate user
+  //     if (!isAuth.isAuthenticated || isAuthExpired.isAuthenticationExpired) {
+  //       await Authentication.authenticate({
+  //         apiKey: apiKey,
+  //         payload: pay,
+  //         signature: signature.signature,
+  //         externalId: externalId
+  //       });
+  //     }
+  //     // If user is authenticated successfully
+  //     const initAuth = await Authentication.initAuthentication();
+  //     setValue2("Auth success");
+  //     console.log('initAuth', initAuth.initAuthentication);
+  //   } catch (error) {
+  //     setValue2("Auth fail");
+  //     console.log('error', error);
+  //   }
 
-  }
+  // }
 
-  const secretKey  = {
-    lensFacing: TruvideoSdkCamera.LensFacing.Front, //Front and Back option are there
-    flashMode: TruvideoSdkCamera.FlashMode.Off,// On and Off option are there
-    orientation: TruvideoSdkCamera.Orientation.Portrait, // Portrait, LandscapeLeft,LandscapeRight and PortraitReverse option are there
+  // const secretKey  = {
+  //   lensFacing: TruvideoSdkCamera.LensFacing.Front,
+  //   flashMode: TruvideoSdkCamera.FlashMode.Off,// On and Off option are there
+  //   orientation: TruvideoSdkCamera.Orientation.Portrait, // Portrait, LandscapeLeft,LandscapeRight and PortraitReverse option are there
+  //   outputPath: "",
+  //   frontResolutions: [],
+  //   frontResolution: 'null',
+  //   backResolutions: [],
+  //   backResolution: 'null',
+  //   mode: TruvideoSdkCamera.mode.Picture, // Picture,Video and VideoAndPicture options are there
+  // };
+
+  const secretKey = {
+    lensFacing: TruvideoSdkCamera.LensFacing?.Front || "front",  // Fallback to "front"
+    flashMode: TruvideoSdkCamera.FlashMode?.Off || "off",  // Fallback to "off"
+    orientation: TruvideoSdkCamera.Orientation?.Portrait || "portrait",  // Fallback
     outputPath: "",
     frontResolutions: [],
-    frontResolution: 'nil',
+    frontResolution: null,
     backResolutions: [],
-    backResolution: 'nil',
-    mode: TruvideoSdkCamera.Mode.Picture, // Picture,Video and VideoAndPicture options are there
-  };
+    backResolution: null,
+    mode: TruvideoSdkCamera.Mode?.Picture || "picture"  // Fallback to "picture"
+};
+
+  const formattedSecretKey = {
+    ...secretKey,
+    lensFacing: String(secretKey.lensFacing),  
+    flashMode: String(secretKey.flashMode),     
+    orientation: String(secretKey.orientation),  
+    mode: String(secretKey.mode)  
+};
+
   
   async function openCamera() {
     try {
-      const response = await TruvideoSdkCamera.initCameraScreen({ configuration: JSON.stringify(secretKey) })
-      console.log("Captured Image Path:", response.imagePath);
+
+      const jsonString = JSON.stringify(formattedSecretKey);
+      console.log("📤 Sending JSON:", jsonString);
+
+      const response = await TruvideoSdkCamera.initCameraScreen({ configuration: jsonString });
+      console.log("📸 Captured Image Path:", response.imagePath);
+
+      // const response = await TruvideoSdkCamera.initCameraScreen({ configuration: JSON.stringify(formattedSecretKey) })
+      // console.log("Captured Image Path:", response.imagePath);
     } catch (error) {
       console.error("Camera error:", error);
     }
@@ -154,7 +182,7 @@ function App() {
        {/* <h2> {value1 && "Token  " + value1}</h2> */}
       <h2> {isAuthenticationExpire}</h2>
       
-      <button onClick={() => auth()}>Click to Auth </button>
+      {/* <button onClick={() => auth()}>Click to Auth </button> */}
       <button onClick={() => openCamera()}>Open Camera  </button>
       <h2>Hii </h2>
     </div>
