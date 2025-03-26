@@ -15,7 +15,7 @@
     "react-dom": "^19.0.0",
     "react-scripts": "5.0.1",
     "truvideo-capacitor-camera-sdk": "github:Truvideo/TruVideoCapacitorCameraSdk#himanshu-dev",
-    "truvideo-capacitor-coremodule-sdk": "github:Truvideo/TruVideoCapacitorCoreSdk#dev-himanshu",
+    "truvideo-capacitor-core-sdk": "github:Truvideo/TruVideoCapacitorCoreSdk#dev-himanshu",
     "web-vitals": "^4.2.4"
   },
   "scripts": {

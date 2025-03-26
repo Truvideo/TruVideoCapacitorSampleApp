@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import { TruvideoSdkCamera } from 'truvideo-capacitor-camera-sdk';
-import { Authentication } from 'truvideo-capacitor-coremodule-sdk';
-// import { TruvideoSdkCamera } from 'truvideo-capacitor-camera-sdk'
+import { TruVideoSdkCore } from 'truvideo-capacitor-core-sdk';
 
 function App() {
   const [value, setValue] = useState();
@@ -11,18 +10,25 @@ function App() {
   const [isAuthenticationExpire, setIsAuthenticationExpire] = useState(true);
   const [testIosPlugin, setTestIosPlugin]  = useState(false); 
 
-  useEffect(() => {
-    const eventTarget = new EventTarget();
+  // useEffect(() => {
+  //   const eventTarget = new EventTarget();
+  //   // Listener for 'onProgress' event
+  //   eventTarget.addEventListener('cameraEvent', (event) => {
+  //     console.log('onProgress event:', event);
+  //   });
 
-    // Listener for 'onProgress' event
-    eventTarget.addEventListener('cameraEvent', (event) => {
-      console.log('onProgress event:', event);
-    });
-  })
+  //   eventTarget.addListener('cameraEvent', (event) => {
+  //     console.log('onProgress event:', event);
+  //   });
+
+  //   TruvideoSdkCamera.addListener("cameraEvent", (event) => {
+  //     console.log("Received Camera Event:", event);
+  //   });
+  // })
 
     // async function testPluginIos() {
     //   try {
-    //     const result = await Authentication.echo({value : "Hello ISO "}); 
+    //     const result = await TruVideoSdkCore.echo({value : "Hello ISO "}); 
     //     setTestIosPlugin(result);
     //     console.log("Plugin Response on iOS:", result);
     //   } catch (error) {
@@ -35,7 +41,7 @@ function App() {
   // async function testPlugin() {
   //   let response;
   //   try {
-  //     response = await Authentication.echo({ value: "Hello from New Capacitor Plugin !" });
+  //     response = await TruVideoSdkCore.echo({ value: "Hello from New Capacitor Plugin !" });
   //     setValue(response.value);
   //     console.log("Plugin Response:", response);
   //   } catch (error) {
@@ -49,7 +55,7 @@ function App() {
   // async function isUserAuthenticated() {
   //   let response;
   //   try {
-  //     response = await Authentication.isAuthenticated();
+  //     response = await TruVideoSdkCore.isAuthenticated();
   //     console.log("isAuthenticated Response:", response);
   //   } catch (error) {
   //     console.error("Error in checking isAuthenticated :", error);
@@ -60,7 +66,7 @@ function App() {
   // async function isAuthenticationExpired() {
   //   let response;
   //   try {
-  //     response = await Authentication.isAuthenticationExpired();
+  //     response = await TruVideoSdkCore.isAuthenticationExpired();
   //     setIsAuthenticationExpire(response.isAuthenticationExpired);
   //     console.log("isAuthenticationExpired Response:", response);
   //   } catch (error) {
@@ -72,18 +78,18 @@ function App() {
 
   async function auth() {
     try {
-      const isAuth = await Authentication.isAuthenticated();
-      console.log('isAuth', isAuth.authenticate);
+      const isAuth = await TruVideoSdkCore.isAuthenticated();
+      // console.log('isAuth', isAuth.authenticate);
       // Check if authentication token has expired
-      const isAuthExpired = await Authentication.isAuthenticationExpired();
+      const isAuthExpired = await TruVideoSdkCore.isAuthenticationExpired();
       console.log('isAuthExpired', isAuthExpired.isAuthenticationExpired);
       //generate payload for authentication
-      const payload = await Authentication.generatePayload();
+      const payload = await TruVideoSdkCore.generatePayload();
       const pay = String(payload.generatePayload);
       const apiKey = "EPhPPsbv7e";
       const secretKey = "9lHCnkfeLl";
 
-      const signature = await Authentication.toSha256String({
+      const signature = await TruVideoSdkCore.toSha256String({
         secretKey: secretKey,
         payload: pay
       });
@@ -91,15 +97,16 @@ function App() {
       const externalId = "";
       // Authenticate user
       if (!isAuth.isAuthenticated || isAuthExpired.isAuthenticationExpired) {
-        await Authentication.authenticate({
-          apiKey: apiKey,
-          payload: pay,
-          signature: signature.signature,
-          externalId: externalId
-        });
+        // await TruVideoSdkCore.authenticate({
+        //   apiKey: apiKey,
+        //   payload: pay,
+        //   signature: signature.signature,
+        //   externalId: externalId
+        // });
       }
+      console.log('isAuth', isAuth.isAuthenticated);
       // If user is authenticated successfully
-      const initAuth = await Authentication.initAuthentication();
+      const initAuth = await TruVideoSdkCore.initAuthentication();
       setValue2("Auth success");
       console.log('initAuth', initAuth.initAuthentication);
     } catch (error) {
@@ -152,7 +159,7 @@ function App() {
   // });
 
   return (
-    <div className="AFpp">
+    <div className="App">
       <br></br>
       <br></br>
       <br></br>
