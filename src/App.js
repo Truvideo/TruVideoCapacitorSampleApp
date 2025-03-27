@@ -21,9 +21,9 @@ function App() {
   //     console.log('onProgress event:', event);
   //   });
 
-  //   TruvideoSdkCamera.addListener("cameraEvent", (event) => {
-  //     console.log("Received Camera Event:", event);
-  //   });
+    TruvideoSdkCamera.addListener("cameraEvent", (event) => {
+      console.log("Received Camera Event:", event);
+    });
   // })
 
     // async function testPluginIos() {
