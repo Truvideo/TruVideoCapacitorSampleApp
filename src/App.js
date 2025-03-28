@@ -2,40 +2,49 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import { TruvideoSdkCamera } from 'truvideo-capacitor-camera-sdk';
 import { TruVideoSdkCore } from 'truvideo-capacitor-core-sdk';
-
+import { TruvideoSdkMedia } from 'truvideo-capacitor-media-sdk'
 function App() {
   const [value, setValue] = useState();
   const [value1, setValue1] = useState();
   const [value2, setValue2] = useState();
+  const[isUploaded, setIsUploaded] = useState(); 
   const [isAuthenticationExpire, setIsAuthenticationExpire] = useState(true);
   const [testIosPlugin, setTestIosPlugin]  = useState(false); 
 
-  // useEffect(() => {
-  //   const eventTarget = new EventTarget();
-  //   // Listener for 'onProgress' event
-  //   eventTarget.addEventListener('cameraEvent', (event) => {
-  //     console.log('onProgress event:', event);
-  //   });
-
-  //   eventTarget.addListener('cameraEvent', (event) => {
-  //     console.log('onProgress event:', event);
-  //   });
-
-    TruvideoSdkCamera.addListener("cameraEvent", (event) => {
-      console.log("Received Camera Event:", event);
+  useEffect(() => {
+     TruvideoSdkCamera.addListener("cameraEvent", (event) => {
+      console.log("Received Camera Event:", event.cameraEvent);
     });
-  // })
+       const onUploadProgress = TruvideoSdkMedia.addListener("onProgress", (event) => {
+        console.log(`⏳ Upload Progress: ${event.progress}% for file ${event.id}`);
+    });
 
-    // async function testPluginIos() {
-    //   try {
-    //     const result = await TruVideoSdkCore.echo({value : "Hello ISO "}); 
-    //     setTestIosPlugin(result);
-    //     console.log("Plugin Response on iOS:", result);
-    //   } catch (error) {
-    //     console.error("Error on iOS:", error);
-    //   }
-    // }
-    // testPluginIos();
+    const onUploadError = TruvideoSdkMedia.addListener("onError", (event) => {
+        console.error(`❌ Upload Error for file ${event.id}:`, event.error);
+    });
+
+    const onUploadComplete = TruvideoSdkMedia.addListener("onComplete", (event) => {
+        console.log(`✅ Upload Complete for file ${event.id}:`, event.response);
+    });
+
+    return () => {
+        console.log("🧹 Removing upload event listeners...");
+        onUploadProgress.remove();
+        onUploadError.remove();
+        onUploadComplete.remove();
+    };
+  }, []);
+
+
+    async function testPluginIos() {
+      try {
+        const result = await TruvideoSdkMedia.echo({value : "Hello Media "}); 
+        setTestIosPlugin(result);
+        console.log("Plugin Response on iOS:", result);
+      } catch (error) {
+        console.error("Error on iOS:", error);
+      }
+    }
 
 
   // async function testPlugin() {
@@ -97,12 +106,12 @@ function App() {
       const externalId = "";
       // Authenticate user
       if (!isAuth.isAuthenticated || isAuthExpired.isAuthenticationExpired) {
-        // await TruVideoSdkCore.authenticate({
-        //   apiKey: apiKey,
-        //   payload: pay,
-        //   signature: signature.signature,
-        //   externalId: externalId
-        // });
+        await TruVideoSdkCore.authenticate({
+          apiKey: apiKey,
+          payload: pay,
+          signature: signature.signature,
+          externalId: externalId
+        });
       }
       console.log('isAuth', isAuth.isAuthenticated);
       // If user is authenticated successfully
@@ -141,11 +150,55 @@ function App() {
     try {
 
       const jsonString = JSON.stringify(formattedSecretKey);
-      console.log("📤 Sending JSON:", jsonString);
+      console.log("📤 Opening Camera :", jsonString);
+      let mediaItems = []
 
       const response = await TruvideoSdkCamera.initCameraScreen({ configuration: jsonString });
-      console.log("📸 Captured Image Path:", response.imagePath);
+      console.log("📸 Captured Image Path:", response.result);
+      const resultData = response.result; 
+     
+      if (typeof resultData === "string") {
+        try {
+            mediaItems = JSON.parse(resultData);
+            console.log("✅ Parsed mediaItems:", mediaItems);
+        } catch (error) {
+            console.error("❌ Failed to parse response.result:", error);
+        }
+      } else if (Array.isArray(resultData)) {
+        mediaItems = resultData;
+      }
 
+      const tag = {
+        key: "value",
+        color: "red",
+        orderNumber: "123"
+      };
+      const metaData = {
+        key: "value",
+        key1: 1,
+        key2: [4, 5, 6]
+      };
+
+      if(Array.isArray(mediaItems)){
+          for (const item of mediaItems) {
+            try {
+          const uploadMediaResponse = await TruvideoSdkMedia.uploadMedia({ 
+              filePath : item.filePath, 
+              tag : JSON.stringify(tag) , 
+              metaData : JSON.stringify(metaData)
+            }); 
+              console.log("uploadMediaResponnse " , uploadMediaResponse.response ); 
+            }catch (uploadError) {
+              console.error("❌ Upload failed for:", item.filePath, uploadError);
+          }
+  
+        }
+        console.log("Upload Success");
+        setIsUploaded("Upload Success")
+      }else {
+        console.error("❌ Camera Upload Failed: mediaItems is not an array.");
+    }
+      
     } catch (error) {
       console.error("Camera error:", error);
     }
@@ -173,7 +226,10 @@ function App() {
       <br></br>
       <br></br>
       <button onClick={() => openCamera()}>Open Camera  </button>
-      
+
+      <br></br>
+      <br></br>
+      <h2> {isUploaded}</h2>
     </div>
   );
 }

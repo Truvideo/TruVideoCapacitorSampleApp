@@ -14,6 +14,8 @@ PODS:
     - Capacitor
   - TruvideoCapacitorCoreSdk (0.0.1):
     - Capacitor
+  - TruvideoCapacitorMediaSdk (0.0.1):
+    - Capacitor
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
@@ -24,6 +26,7 @@ DEPENDENCIES:
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
   - TruvideoCapacitorCameraSdk (from `../../node_modules/truvideo-capacitor-camera-sdk`)
   - TruvideoCapacitorCoreSdk (from `../../node_modules/truvideo-capacitor-core-sdk`)
+  - TruvideoCapacitorMediaSdk (from `../../node_modules/truvideo-capacitor-media-sdk`)
 
 EXTERNAL SOURCES:
   Capacitor:
@@ -42,6 +45,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/truvideo-capacitor-camera-sdk"
   TruvideoCapacitorCoreSdk:
     :path: "../../node_modules/truvideo-capacitor-core-sdk"
+  TruvideoCapacitorMediaSdk:
+    :path: "../../node_modules/truvideo-capacitor-media-sdk"
 
 SPEC CHECKSUMS:
   Capacitor: 68ff8eabbcce387e69767c13b5fbcc1c5399eabc
@@ -52,7 +57,8 @@ SPEC CHECKSUMS:
   CapacitorStatusBar: 438e90beeeefa8276b24e6c5991cb02dd13e51bf
   TruvideoCapacitorCameraSdk: ce9b590013fd933fae0b7a69e37e684ad7eafde8
   TruvideoCapacitorCoreSdk: ccac23830b1ffc9899b4e2339858496784703f48
+  TruvideoCapacitorMediaSdk: 77fd6ae34ab30db885c7addba1747618b01c71c8
 
-PODFILE CHECKSUM: 7636636019636a9378eddacd4d42f8b74a66544a
+PODFILE CHECKSUM: 713b3dc6d055503e4d2be6c1d0951ee67d5057b0
 
 COCOAPODS: 1.16.2

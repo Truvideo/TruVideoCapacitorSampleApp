@@ -19,3 +19,6 @@ project(':truvideo-capacitor-camera-sdk').projectDir = new File('../node_modules
 
 include ':truvideo-capacitor-core-sdk'
 project(':truvideo-capacitor-core-sdk').projectDir = new File('../node_modules/truvideo-capacitor-core-sdk/android')
+
+include ':truvideo-capacitor-media-sdk'
+project(':truvideo-capacitor-media-sdk').projectDir = new File('../node_modules/truvideo-capacitor-media-sdk/android')
