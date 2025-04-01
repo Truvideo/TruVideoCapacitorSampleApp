@@ -8,10 +8,12 @@ function App() {
   const [value1, setValue1] = useState();
   const [value2, setValue2] = useState();
   const[isUploaded, setIsUploaded] = useState(); 
+  const[uploadedImages, setUploadedImages] = useState([]); 
   const [isAuthenticationExpire, setIsAuthenticationExpire] = useState(true);
   const [testIosPlugin, setTestIosPlugin]  = useState(false); 
 
   useEffect(() => {
+    console.log("uploadedImages" ,uploadedImages); 
      TruvideoSdkCamera.addListener("cameraEvent", (event) => {
       console.log("Received Camera Event:", event.cameraEvent);
     });
@@ -182,19 +184,24 @@ function App() {
       if(Array.isArray(mediaItems)){
           for (const item of mediaItems) {
             try {
-          const uploadMediaResponse = await TruvideoSdkMedia.uploadMedia({ 
-              filePath : item.filePath, 
-              tag : JSON.stringify(tag) , 
-              metaData : JSON.stringify(metaData)
-            }); 
-              console.log("uploadMediaResponnse " , uploadMediaResponse.response ); 
+              console.log("item" , item.filePath ); 
+              const payload = {
+                filePath: item.filePath, 
+                tag: JSON.stringify(tag),
+                metaData: JSON.stringify(metaData),
+              };
+              const uploadMediaResponse = await TruvideoSdkMedia.uploadMedia(payload); 
+              console.log("uploadMedia Responnse " , uploadMediaResponse.response ); 
+              const url =  uploadMediaResponse.response.uploadedFileURL || uploadMediaResponse.response.remoteUrl; 
+              if(url) 
+                setUploadedImages((prevImages) => [...prevImages, url]);
+
             }catch (uploadError) {
               console.error("❌ Upload failed for:", item.filePath, uploadError);
           }
-  
         }
-        console.log("Upload Success");
         setIsUploaded("Upload Success")
+
       }else {
         console.error("❌ Camera Upload Failed: mediaItems is not an array.");
     }
@@ -203,13 +210,6 @@ function App() {
       console.error("Camera error:", error);
     }
   }
-
-  // const eventEmitter = new NativeEventEmitter(NativeModules.TruVideoReactMediaSdk);
-
-  // const onUploadProgress = eventEmitter.addListener('onProgress', (event) => {
-  //   // handle progress with recieved JSON
-  //   console.log('onProgress event:', event);
-  // });
 
   return (
     <div className="App">
@@ -230,6 +230,7 @@ function App() {
       <br></br>
       <br></br>
       <h2> {isUploaded}</h2>
+      <h3>{uploadedImages}</h3>
     </div>
   );
 }
