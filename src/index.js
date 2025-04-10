@@ -3,11 +3,18 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { IonReactRouter } from '@ionic/react-router';
+import { IonApp } from '@ionic/react';
+// import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <IonApp> {/* optional nice wrapper */}
+    <IonReactRouter> {/* instead of BrowserRouter */}
+      <App />
+      </IonReactRouter>
+      </IonApp>
   </React.StrictMode>
 );
 
