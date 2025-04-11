@@ -17,6 +17,7 @@ def capacitor_pods
   pod 'CapacitorStatusBar', :path => '../../node_modules/@capacitor/status-bar'
   pod 'TruvideoCapacitorCameraSdk', :path => '../../node_modules/truvideo-capacitor-camera-sdk'
   pod 'TruvideoCapacitorCoreSdk', :path => '../../node_modules/truvideo-capacitor-core-sdk'
+  pod 'TruvideoCapacitorImageSdk', :path => '../../node_modules/truvideo-capacitor-image-sdk'
   pod 'TruvideoCapacitorMediaSdk', :path => '../../node_modules/truvideo-capacitor-media-sdk'
   pod 'TruvideoCapacitorVideoSdk', :path => '../../node_modules/truvideo-capacitor-video-sdk'
 end

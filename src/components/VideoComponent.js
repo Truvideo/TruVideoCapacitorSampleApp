@@ -79,7 +79,7 @@ function VideoComponent() {
       try {
         const payload = {
           resultPath: "",
-          videoPath: JSON.stringify(safeFirstSelected),
+          videoPath: safeFirstSelected,
           config: JSON.stringify(defaultConfig),
           position: 1000,
           width: 640,
@@ -123,7 +123,7 @@ function VideoComponent() {
       try {
         const payload = {
           resultPath: "",
-          videoPath: JSON.stringify(safeFirstSelected),
+          videoPath: safeFirstSelected,
         };
         const { result } = await TruvideoSdkVideo.cleanNoise(payload);
         console.log("Clean Noise Result:", result);

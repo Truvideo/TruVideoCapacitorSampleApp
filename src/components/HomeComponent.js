@@ -12,8 +12,6 @@ function HomeComponent() {
   const [value2, setValue2] = useState();
   const[isUploaded, setIsUploaded] = useState(); 
   const[uploadedImages, setUploadedImages] = useState([]); 
-  const [isAuthenticationExpire, setIsAuthenticationExpire] = useState(true);
-  const [testIosPlugin, setTestIosPlugin]  = useState(false); 
   const history = useHistory();
   
 
@@ -45,46 +43,6 @@ function HomeComponent() {
     };
   }, []);
 
-
-    async function testPluginIos() {
-      try {
-        const result = await TruvideoSdkMedia.echo({value : "Hello Media "}); 
-        setTestIosPlugin(result);
-        console.log("Plugin Response on iOS:", result);
-      } catch (error) {
-        console.error("Error on iOS:", error);
-      }
-    }
-
-    const navigateVideoModule = () => {
-        history.push('/video', { uploadedVideos: uploadedImages }); // 👈 send it in `state`
-    };
-    
-    
-
-  // async function isUserAuthenticated() {
-  //   let response;
-  //   try {
-  //     response = await TruVideoSdkCore.isAuthenticated();
-  //     console.log("isAuthenticated Response:", response);
-  //   } catch (error) {
-  //     console.error("Error in checking isAuthenticated :", error);
-  //   }
-  //   return response.isAuthenticated
-  // }
-
-  // async function isAuthenticationExpired() {
-  //   let response;
-  //   try {
-  //     response = await TruVideoSdkCore.isAuthenticationExpired();
-  //     setIsAuthenticationExpire(response.isAuthenticationExpired);
-  //     console.log("isAuthenticationExpired Response:", response);
-  //   } catch (error) {
-  //     setValue(error);
-  //     console.error("Error in checking isAuthenticationExpired:", error);
-  //   }
-  //   return response.isAuthenticationExpired
-  // }
 
   async function auth() {
     try {
@@ -180,39 +138,52 @@ function HomeComponent() {
         key1: 1,
         key2: [4, 5, 6]
       };
+      const videoUrls = [];
+      const imageUrls = [];
       const mediaUrls = [];
       if(Array.isArray(mediaItems)){
           for (const item of mediaItems) {
             try {
-              console.log("item" , item.filePath ); 
-              const payload = {
-                filePath: item.filePath, 
-                tag: JSON.stringify(tag),
-                metaData: JSON.stringify(metaData),
-              };
+                if (!item?.filePath) {
+                    console.warn("Skipping item without filePath:", item);
+                    continue;
+                  }
+                console.log("item" , item.filePath ); 
+                const payload = {
+                    filePath: item.filePath, 
+                    tag: JSON.stringify(tag),
+                    metaData: JSON.stringify(metaData),
+                };
 
               const uploadMediaResponse = await TruvideoSdkMedia.uploadMedia(payload);
 
-              // See full object
               console.log("uploadMedia Response (full):", JSON.stringify(uploadMediaResponse, null, 2));
 
-              // Parse the 'response' JSON string
               let parsedResponse = {};
               try {
-                parsedResponse = JSON.parse(uploadMediaResponse.response);
+                parsedResponse = JSON.parse(uploadMediaResponse?.response || '{}');
                 console.log("✅ Parsed Response:", parsedResponse);
               } catch (error) {
                 console.error("❌ Failed to parse uploadMedia response:", error);
               }
 
-              // Now get the remoteUrl
+              //Now get the remoteUrl
               const url = parsedResponse.filePath ?? parsedResponse.filePath;
-              console.log("✅ Upload Completed. URL:", url);
+              const type = parsedResponse.type; //
+             
+              console.log("✅ Upload Completed. URL:", url, "Type:", type);
+
 
               if (url) {
                 setUploadedImages((prevImages) => [...prevImages, url]);
-                mediaUrls.push(url); // 📥 Collect uploaded URLs
-              
+                if (type === "VIDEO") {
+                    videoUrls.push(url);
+                  } else if (type === "IMAGE") {
+                    imageUrls.push(url);
+                  } else {
+                    console.warn("Unknown media type:", type);
+                  }
+                  mediaUrls.push(url); // if you still want to keep a combined list
               } else {
                 console.error("❌ Upload failed: No URL found in parsed response", parsedResponse);
               }
@@ -221,18 +192,21 @@ function HomeComponent() {
           }
         }
         setIsUploaded("Upload Success")
-        console.log("mediaUrls" , mediaUrls)
+        console.log("All mediaUrls:", mediaUrls);
+        console.log("Video URLs:", videoUrls);
+        console.log("Image URLs:", imageUrls);
+      
         if (mediaUrls.length > 0) {
-            setUploadedImages(mediaUrls); // update your state
-            // navigate('/video', { state: { uploadedVideos: mediaUrls } }); 
-            history.push('/video', { uploadedVideos: mediaUrls }); // 👈 send it in `state`
+            // Send both videoUrls and imageUrls via navigation state
+            history.push('/media', { 
+              uploadedVideos: videoUrls,
+              uploadedImages: imageUrls
+            });
           }
-          
 
       }else {
         console.error("❌ Camera Upload Failed: mediaItems is not an array.");
-    }
-      
+      }
     } catch (error) {
       console.error("Camera error:", error);
     }
