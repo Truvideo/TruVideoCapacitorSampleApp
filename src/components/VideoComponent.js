@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';  // 👈 Import to receive data
-import './../App.css';
+import './../css/App.css';
 import { TruvideoSdkCamera } from 'truvideo-capacitor-camera-sdk';
 import { TruvideoSdkVideo } from 'truvideo-capacitor-video-sdk';
 import { toast } from 'react-toastify';
 
 function VideoComponent() {
-  const location = useLocation();
-  const { uploadedVideos = [] } = location.state || {};
+  const [uploadedVideos, setUploadedVideos] = useState([]);
   const [selectedVideos, setSelectedVideos] = useState([]);
+  const multipleSelected = selectedVideos.length >= 2;
+  const singleSelected = selectedVideos.length >= 1;
+
 
   useEffect(() => {
     const subscription = TruvideoSdkCamera.addListener("cameraEvent", (event) => {
@@ -19,6 +21,13 @@ function VideoComponent() {
       subscription?.remove?.();
     };
   }, [uploadedVideos]);
+
+  useEffect(() => {
+    const savedVideos = JSON.parse(localStorage.getItem('uploadedVideos') || '[]');
+    setUploadedVideos(savedVideos);
+  }, []);
+
+
 
   const handleCheckboxChange = (url) => {
     setSelectedVideos((prevSelected) =>
@@ -60,9 +69,11 @@ function VideoComponent() {
 
     async compareVideos() {
       if (!safeFirstSelected) return;
-
+      const payload = {
+        videoUris: JSON.stringify(selectedVideos),
+      };
       try {
-        const { result } = await TruvideoSdkVideo.compareVideos(JSON.stringify(selectedVideos));
+        const { result } = await TruvideoSdkVideo.compareVideos(payload);
         console.log("Comparison result:", result);
         toast.success('Compare successful!');
       } catch (error) {
@@ -79,7 +90,7 @@ function VideoComponent() {
       try {
         const payload = {
           resultPath: "",
-          videoPath: safeFirstSelected,
+          videoPath: JSON.stringify(safeFirstSelected),
           config: JSON.stringify(defaultConfig),
           position: 1000,
           width: 640,
@@ -123,7 +134,7 @@ function VideoComponent() {
       try {
         const payload = {
           resultPath: "",
-          videoPath: safeFirstSelected,
+          videoPath: JSON.stringify(safeFirstSelected),
         };
         const { result } = await TruvideoSdkVideo.cleanNoise(payload);
         console.log("Clean Noise Result:", result);
@@ -142,7 +153,7 @@ function VideoComponent() {
       try {
         const payload = {
           resultPath: "",
-          videoPath: JSON.stringify(safeFirstSelected),
+          videoPath: safeFirstSelected,
           config: JSON.stringify(defaultConfig),
         };
         const { result } = await TruvideoSdkVideo.editVideo(payload);
@@ -191,47 +202,179 @@ function VideoComponent() {
     },
   };
 
-
-
   return (
-    <div className="video-list">
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
+    <div style={styles.container}>
+      <div style={{ marginBottom: 30 }} />
+
       {uploadedVideos.length > 0 ? (
         <>
-        {uploadedVideos.map((url, index) => (
-            <div key={index} className="video-item" style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+          {uploadedVideos.map((url, index) => (
+            <div key={index} style={styles.item}>
               <input
                 type="checkbox"
                 checked={selectedVideos.includes(url)}
                 onChange={() => handleCheckboxChange(url)}
-                style={{ marginRight: '10px' }}
+                style={styles.checkbox}
               />
-              {/* <video src={url} controls width="30" height="40" /> */}
-              <span>{url}</span>
-
+              <span style={styles.text}>{url.split('/').pop()}</span>
             </div>
           ))}
 
-          {/* Action Buttons */}
-          <div className="video-actions" style={{ marginTop: '20px' }}>
-            <button onClick={apiHandlers.mergeVideos}>Merge Videos</button>
-            <button onClick={apiHandlers.compareVideos}>Compare Videos</button>
-            <button onClick={apiHandlers.generateThumbnail}>Generate Thumbnail</button>
-            <button onClick={apiHandlers.encodeVideo}>Encode Video</button>
-            <button onClick={apiHandlers.cleanNoise}>Clean Noise</button>
-            <button onClick={apiHandlers.editVideo}>Edit Video</button>
-            <button onClick={apiHandlers.concatVideos}>Concat Videos</button>
-            <button onClick={apiHandlers.getVideoInfo}>Get Video Info</button>
+          <div style={styles.buttonGroup}>
+            {[
+              {
+                label: 'Merge Videos',
+                action: apiHandlers.mergeVideos,
+                enabled: multipleSelected,
+              },
+              {
+                label: 'Compare Videos',
+                action: apiHandlers.compareVideos,
+                enabled: multipleSelected,
+              },
+              {
+                label: 'Concat Videos',
+                action: apiHandlers.concatVideos,
+                enabled: multipleSelected,
+              },
+              {
+                label: 'Generate Thumbnail',
+                action: apiHandlers.generateThumbnail,
+                enabled: singleSelected,
+              },
+              {
+                label: 'Encode Video',
+                action: apiHandlers.encodeVideo,
+                enabled: singleSelected,
+              },
+              {
+                label: 'Clean Noise',
+                action: apiHandlers.cleanNoise,
+                enabled: singleSelected,
+              },
+              {
+                label: 'Edit Video',
+                action: apiHandlers.editVideo,
+                enabled: singleSelected,
+              },
+              {
+                label: 'Get Video Info',
+                action: apiHandlers.getVideoInfo,
+                enabled: singleSelected,
+              },
+            ].map((btn, idx) => (
+              <button
+                key={idx}
+                onClick={btn.action}
+                style={{
+                  ...styles.button,
+                  backgroundColor: btn.enabled ? '#3490CA' : '#ccc',
+                  cursor: btn.enabled ? 'pointer' : 'not-allowed',
+                }}
+                disabled={!btn.enabled}
+              >
+                {btn.label}
+              </button>
+            ))}
           </div>
         </>
       ) : (
-        <p>No videos available.</p>
+        <p style={styles.emptyText}>No videos available.</p>
       )}
     </div>
   );
-}
+};
+
+const styles = {
+  container: {
+    padding: 16,
+    fontFamily: 'Arial, sans-serif',
+    maxWidth: 500,
+    margin: '0 auto',
+  },
+  item: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: 12,
+    backgroundColor: '#f9f9f9',
+    padding: 12,
+    borderRadius: 10,
+    border: '1px solid #ddd',
+    gap: 10,
+  },
+  checkbox: {
+    marginRight: 10,
+  },
+  text: {
+    fontSize: 14,
+    wordBreak: 'break-all',
+  },
+  buttonGroup: {
+    marginTop: 20,
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 10,
+    justifyContent: 'center',
+  },
+  button: {
+    padding: '12px 18px',
+    border: 'none',
+    borderRadius: 25,
+    fontSize: 14,
+    minWidth: 140,
+    textAlign: 'center',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+    color: '#fff',
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#888',
+    fontSize: 16,
+  },
+};
+
+
+
+
+// return (
+//   <div className="video-list">
+//     <br></br>
+//     <br></br>
+//     <br></br>
+//     <br></br>
+//     {uploadedVideos.length > 0 ? (
+//       <>
+//       {uploadedVideos.map((url, index) => (
+//           <div key={index} className="video-item" style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+//             <input
+//               type="checkbox"
+//               checked={selectedVideos.includes(url)}
+//               onChange={() => handleCheckboxChange(url)}
+//               style={{ marginRight: '10px' }}
+//             />
+//             {/* <video src={url} controls width="30" height="40" /> */}
+//             <span>{url}</span>
+
+//           </div>
+//         ))}
+
+//         {/* Action Buttons */}
+//         <div className="video-actions" style={{ marginTop: '20px' }}>
+//           <button onClick={apiHandlers.mergeVideos}>Merge Videos</button>
+//           <button onClick={apiHandlers.compareVideos}>Compare Videos</button>
+//           <button onClick={apiHandlers.generateThumbnail}>Generate Thumbnail</button>
+//           <button onClick={apiHandlers.encodeVideo}>Encode Video</button>
+//           <button onClick={apiHandlers.cleanNoise}>Clean Noise</button>
+//           <button onClick={apiHandlers.editVideo}>Edit Video</button>
+//           <button onClick={apiHandlers.concatVideos}>Concat Videos</button>
+//           <button onClick={apiHandlers.getVideoInfo}>Get Video Info</button>
+//         </div>
+//       </>
+//     ) : (
+//       <p>No videos available.</p>
+//     )}
+//   </div>
+// );
+// }
 
 export default VideoComponent

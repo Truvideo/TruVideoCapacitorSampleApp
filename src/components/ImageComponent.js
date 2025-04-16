@@ -1,30 +1,31 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';  // 👈 Import to receive data
-import './../App.css';
 import { TruvideoSdkCamera } from 'truvideo-capacitor-camera-sdk';
-// import { TruvideoSdkVideo } from 'truvideo-capacitor-video-sdk';
 import { TruvideoSdkImage } from 'truvideo-capacitor-image-sdk'
 import { toast } from 'react-toastify';
 
 function ImageComponent() {
-    const location = useLocation(); // 👈 get router state
-    console.log("location.state" ,JSON.stringify( location.state));
-    const { uploadedImages = [] } = location.state || {};
+  const [uploadedImages, setUploadedImages] = useState([]);
+  console.log("uploadedImages", uploadedImages);
+  const [selectedImages, setSelectedImages] = useState([]);
 
-    console.log("uploadedImages" , uploadedImages) ;
-    const [selectedImages, setSelectedImages] = useState([]);
+  useEffect(() => {
+    const subscription = TruvideoSdkCamera.addListener("cameraEvent", (event) => {
+      console.log("Camera Event:", event.cameraEvent);
+    });
+    return () => {
+      subscription?.remove?.();
+    };
+  }, []);
 
-
-    useEffect(() => {
-        console.log("uploadedImages" ,uploadedImages); 
-    
-        TruvideoSdkCamera.addListener("cameraEvent", (event) => {
-        console.log("Camera Event:", event.cameraEvent);
-        });  
+  useEffect(() => {
+    const savedImages = JSON.parse(localStorage.getItem('uploadedImages') || '[]');
+    setUploadedImages(savedImages);
   }, []);
 
 
-  async function editVideo() {
+
+  async function editImage() {
     if (!selectedImages[0]) return;
 
     try {
@@ -33,11 +34,9 @@ function ImageComponent() {
         outputPath: ""
       };
       const { result } = await TruvideoSdkImage.editImage(payload);
-      console.log("Edit Video Response:", result);
-      toast.success('Edit successful!');
+      console.log("Edit Image Response:", result);
     } catch (error) {
-      console.error("❌ Failed to Edit Video:", error);
-      toast.error('Edit Failed!');
+      console.error("❌ Failed to Edit Image:", error);
     } finally {
       setSelectedImages([]);
     }
@@ -51,35 +50,90 @@ function ImageComponent() {
     );
   };
   return (
-    <div className="video-list">
+    <div style={styles.container}>
       {uploadedImages.length > 0 ? (
         <>
-        {uploadedImages.map((url, index) => (
-            <div key={index} className="video-item" style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+          {uploadedImages.map((url, index) => (
+            <div key={index} style={styles.item}>
               <input
                 type="checkbox"
                 checked={selectedImages.includes(url)}
                 onChange={() => handleCheckboxChange(url)}
-                style={{ marginRight: '10px' }}
+                style={styles.checkbox}
               />
-              <span>{url}</span>
+              {/* <span style={styles.text}>{url}</span> */}
+              <span style={styles.text}>{url.split('/').pop()}</span>
 
             </div>
           ))}
 
-          {/* Action Buttons */}
-          <div style={{ marginTop: '20px' }}>
-            <button disabled={selectedImages.length === 0} style={{ marginRight: '10px' }} onClick={() => editVideo()}>
-              Edit Video
+          <div style={styles.buttonContainer}>
+            <button
+              disabled={selectedImages.length === 0}
+              style={{
+                ...styles.button,
+                backgroundColor: selectedImages.length === 0 ? '#ccc' : '#3490CA',
+                cursor: selectedImages.length === 0 ? 'not-allowed' : 'pointer',
+              }}
+              onClick={editImage}
+            >
+              Edit Image
             </button>
-           
           </div>
         </>
       ) : (
-        <p>No videos available.</p>
+        <p style={styles.emptyText}>No videos available.</p>
       )}
     </div>
   );
-}
+};
 
+const styles = {
+  container: {
+    padding: 16,
+    maxWidth: 500,
+    margin: '0 auto',
+    fontFamily: 'Arial, sans-serif',
+  },
+
+  item: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: 12,
+    backgroundColor: '#f9f9f9',
+    padding: 12,
+    borderRadius: 10,
+    border: '1px solid #ddd',
+    gap: 10,
+  },
+
+  checkbox: {
+    marginRight: 10,
+  },
+  text: {
+    fontSize: 14,
+    wordBreak: 'break-all',
+  },
+  buttonContainer: {
+    marginTop: 20,
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  button: {
+    padding: '14px 28px',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 25,
+    fontSize: 18,
+    minWidth: 200,
+    textAlign: 'center',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+    transition: 'opacity 0.3s ease',
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#888',
+    fontSize: 16,
+  },
+};
 export default ImageComponent
