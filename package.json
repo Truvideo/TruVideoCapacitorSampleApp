@@ -1,0 +1,56 @@
+{
+  "name": "capacitor-app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "7.0.1",
+    "@capacitor/app": "7.0.0",
+    "@capacitor/core": "^7.0.1",
+    "@capacitor/haptics": "7.0.0",
+    "@capacitor/ios": "^7.1.0",
+    "@capacitor/keyboard": "7.0.0",
+    "@capacitor/status-bar": "7.0.0",
+    "@ionic/react": "^8.5.3",
+    "@ionic/react-router": "^8.5.3",
+    "cra-template": "1.2.0",
+    "ionicons": "^7.4.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^5.3.4",
+    "react-scripts": "5.0.1",
+    "react-toastify": "^11.0.5",
+    "truvideo-capacitor-camera-sdk": "github:Truvideo/TruVideoCapacitorCameraSdk#himanshu-dev",
+    "truvideo-capacitor-core-sdk": "github:Truvideo/TruVideoCapacitorCoreSdk#dev-himanshu",
+    "truvideo-capacitor-image-sdk": "github:Truvideo/TruVideoCapacitorImageSdk#dev-himanshu",
+    "truvideo-capacitor-media-sdk": "github:Truvideo/TruVideoCapacitorMediaSdk#dev-himanshu",
+    "truvideo-capacitor-video-sdk": "github:Truvideo/TruVideoCapacitorVideoSdk#dev-himanshu",
+    "web-vitals": "^4.2.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.1"
+  }
+}

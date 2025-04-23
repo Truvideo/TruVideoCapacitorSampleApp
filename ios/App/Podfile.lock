@@ -1,0 +1,76 @@
+PODS:
+  - Capacitor (7.1.0):
+    - CapacitorCordova
+  - CapacitorApp (7.0.0):
+    - Capacitor
+  - CapacitorCordova (7.1.0)
+  - CapacitorHaptics (7.0.0):
+    - Capacitor
+  - CapacitorKeyboard (7.0.0):
+    - Capacitor
+  - CapacitorStatusBar (7.0.0):
+    - Capacitor
+  - TruvideoCapacitorCameraSdk (0.0.1):
+    - Capacitor
+  - TruvideoCapacitorCoreSdk (0.0.1):
+    - Capacitor
+  - TruvideoCapacitorImageSdk (0.0.1):
+    - Capacitor
+  - TruvideoCapacitorMediaSdk (0.0.1):
+    - Capacitor
+  - TruvideoCapacitorVideoSdk (0.0.1):
+    - Capacitor
+
+DEPENDENCIES:
+  - "Capacitor (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
+  - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
+  - "CapacitorKeyboard (from `../../node_modules/@capacitor/keyboard`)"
+  - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
+  - TruvideoCapacitorCameraSdk (from `../../node_modules/truvideo-capacitor-camera-sdk`)
+  - TruvideoCapacitorCoreSdk (from `../../node_modules/truvideo-capacitor-core-sdk`)
+  - TruvideoCapacitorImageSdk (from `../../node_modules/truvideo-capacitor-image-sdk`)
+  - TruvideoCapacitorMediaSdk (from `../../node_modules/truvideo-capacitor-media-sdk`)
+  - TruvideoCapacitorVideoSdk (from `../../node_modules/truvideo-capacitor-video-sdk`)
+
+EXTERNAL SOURCES:
+  Capacitor:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorApp:
+    :path: "../../node_modules/@capacitor/app"
+  CapacitorCordova:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorHaptics:
+    :path: "../../node_modules/@capacitor/haptics"
+  CapacitorKeyboard:
+    :path: "../../node_modules/@capacitor/keyboard"
+  CapacitorStatusBar:
+    :path: "../../node_modules/@capacitor/status-bar"
+  TruvideoCapacitorCameraSdk:
+    :path: "../../node_modules/truvideo-capacitor-camera-sdk"
+  TruvideoCapacitorCoreSdk:
+    :path: "../../node_modules/truvideo-capacitor-core-sdk"
+  TruvideoCapacitorImageSdk:
+    :path: "../../node_modules/truvideo-capacitor-image-sdk"
+  TruvideoCapacitorMediaSdk:
+    :path: "../../node_modules/truvideo-capacitor-media-sdk"
+  TruvideoCapacitorVideoSdk:
+    :path: "../../node_modules/truvideo-capacitor-video-sdk"
+
+SPEC CHECKSUMS:
+  Capacitor: 68ff8eabbcce387e69767c13b5fbcc1c5399eabc
+  CapacitorApp: 45cb7cbef4aa380b9236fd6980033eb5cde6fcd2
+  CapacitorCordova: 866217f32c1d25b326c568a10ea3ed0c36b13e29
+  CapacitorHaptics: 1fba3e460e7614349c6d5f868b1fccdc5c87b66d
+  CapacitorKeyboard: 2c26c6fccde35023c579fc37d4cae6326d5e6343
+  CapacitorStatusBar: 438e90beeeefa8276b24e6c5991cb02dd13e51bf
+  TruvideoCapacitorCameraSdk: ce9b590013fd933fae0b7a69e37e684ad7eafde8
+  TruvideoCapacitorCoreSdk: ccac23830b1ffc9899b4e2339858496784703f48
+  TruvideoCapacitorImageSdk: 65339a766d69107aa509d2f902ab0eb0dd9b5cd3
+  TruvideoCapacitorMediaSdk: 77fd6ae34ab30db885c7addba1747618b01c71c8
+  TruvideoCapacitorVideoSdk: 25f5a61e356a85255502a812a4f1a783778b63c7
+
+PODFILE CHECKSUM: cc4d03b0aaf8900564979342ccccba6b93f626ba
+
+COCOAPODS: 1.16.2
