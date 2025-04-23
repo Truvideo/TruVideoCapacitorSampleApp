@@ -9,10 +9,7 @@ import { toast } from 'react-toastify';
 
 function HomeComponent() {
   const [isAuthenticatedLoader, setIsAuthenticatedLoader] = useState(false);
-  const [value1, setValue1] = useState();
   const [authenticationValue, setAuthenticationValue] = useState();
-  const [isUploaded, setIsUploaded] = useState();
-  const [isUploadedLoader, setIsUploadedLoader] = useState(false);
 
   const [uploadedImages, setUploadedImages] = useState([]);
   const [uploadedVideos, setUploadedVideos] = useState([]);
@@ -74,8 +71,6 @@ function HomeComponent() {
         secretKey: secretKey,
         payload: pay
       });
-
-      setValue1(signature.signature);
 
       const externalId = "";
 
@@ -143,8 +138,6 @@ function HomeComponent() {
         return;
       }
 
-      setIsUploadedLoader(true);
-
       const videoUrls = [];
       const imageUrls = [];
 
@@ -186,12 +179,9 @@ function HomeComponent() {
       setUploadedVideos(updatedVideos);
       sessionStorage.setItem('uploadedVideos', JSON.stringify(updatedVideos));
 
-      setIsUploaded("Upload Success");
       toast.success('Upload successful!');
     } catch (error) {
       console.error("Camera error:", error);
-    } finally {
-      setIsUploadedLoader(false);
     }
   }
 
