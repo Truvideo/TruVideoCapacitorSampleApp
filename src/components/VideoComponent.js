@@ -51,7 +51,6 @@ function VideoComponent() {
       if (!safeFirstSelected) return;
       try {
         const resultPathResponse = await TruvideoSdkVideo.getResultPath({ path: `${Date.now()}-thumbnail` });
-        console.log("resultPathResponse", resultPathResponse);
         const payload = {
           resultPath: resultPathResponse.resultPath,
           videoUris: JSON.stringify(selectedVideos),
@@ -90,7 +89,6 @@ function VideoComponent() {
 
       try {
         const resultPathResponse = await TruvideoSdkVideo.getResultPath({ path: `${Date.now()}-thumbnail` });
-        console.log("resultPathResponse", resultPathResponse);
         const payload = {
           resultPath: resultPathResponse.resultPath,
           videoPath: safeFirstSelected,
@@ -114,7 +112,6 @@ function VideoComponent() {
     async encodeVideo() {
       if (!safeFirstSelected) return;
       const resultPathResponse = await TruvideoSdkVideo.getResultPath({ path: `${Date.now()}-thumbnail` });
-      console.log("resultPathResponse", resultPathResponse);
       try {
         const payload = {
           resultPath: resultPathResponse.resultPath,
@@ -137,7 +134,6 @@ function VideoComponent() {
 
       try {
         const resultPathResponse = await TruvideoSdkVideo.getResultPath({ path: `${Date.now()}-thumbnail` });
-        console.log("resultPathResponse", resultPathResponse);
         const payload = {
           resultPath: resultPathResponse.resultPath,
           videoPath: safeFirstSelected,
@@ -158,8 +154,6 @@ function VideoComponent() {
 
       try {
         const resultPathResponse = await TruvideoSdkVideo.getResultPath({ path: `${Date.now()}-thumbnail` });
-        console.log("resultPathResponse", resultPathResponse);
-
         const payload = {
           resultPath: resultPathResponse.resultPath,
           videoPath: safeFirstSelected,
@@ -181,7 +175,6 @@ function VideoComponent() {
 
       try {
         const resultPathResponse = await TruvideoSdkVideo.getResultPath({ path: `${Date.now()}-thumbnail` });
-        console.log("resultPathResponse", resultPathResponse);
         const payload = {
           resultPath: resultPathResponse.resultPath,
           videoUris: JSON.stringify(selectedVideos),

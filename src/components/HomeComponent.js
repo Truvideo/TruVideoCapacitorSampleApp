@@ -5,6 +5,7 @@ import { TruvideoSdkCamera, TruvideoSdkCameraLensFacing } from 'truvideo-capacit
 import { TruVideoSdkCore } from 'truvideo-capacitor-core-sdk';
 import { TruvideoSdkMedia } from 'truvideo-capacitor-media-sdk';
 import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function HomeComponent() {
   const [isAuthenticatedLoader, setIsAuthenticatedLoader] = useState(false);
@@ -186,6 +187,7 @@ function HomeComponent() {
       sessionStorage.setItem('uploadedVideos', JSON.stringify(updatedVideos));
 
       setIsUploaded("Upload Success");
+      toast.success('Upload successful!');
     } catch (error) {
       console.error("Camera error:", error);
     } finally {
