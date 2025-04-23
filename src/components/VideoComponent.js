@@ -23,7 +23,7 @@ function VideoComponent() {
   }, [uploadedVideos]);
 
   useEffect(() => {
-    const savedVideos = JSON.parse(localStorage.getItem('uploadedVideos') || '[]');
+    const savedVideos = JSON.parse(sessionStorage.getItem('uploadedVideos') || '[]');
     setUploadedVideos(savedVideos);
   }, []);
 
@@ -49,10 +49,11 @@ function VideoComponent() {
   const apiHandlers = {
     async mergeVideos() {
       if (!safeFirstSelected) return;
-
       try {
+        const resultPathResponse = await TruvideoSdkVideo.getResultPath({ path: `${Date.now()}-thumbnail` });
+        console.log("resultPathResponse", resultPathResponse);
         const payload = {
-          resultPath: "",
+          resultPath: resultPathResponse.resultPath,
           videoUris: JSON.stringify(selectedVideos),
           config: JSON.stringify(defaultConfig),
         };
@@ -88,9 +89,11 @@ function VideoComponent() {
       if (!safeFirstSelected) return;
 
       try {
+        const resultPathResponse = await TruvideoSdkVideo.getResultPath({ path: `${Date.now()}-thumbnail` });
+        console.log("resultPathResponse", resultPathResponse);
         const payload = {
-          resultPath: "",
-          videoPath: JSON.stringify(safeFirstSelected),
+          resultPath: resultPathResponse.resultPath,
+          videoPath: safeFirstSelected,
           config: JSON.stringify(defaultConfig),
           position: 1000,
           width: 640,
@@ -110,10 +113,11 @@ function VideoComponent() {
 
     async encodeVideo() {
       if (!safeFirstSelected) return;
-
+      const resultPathResponse = await TruvideoSdkVideo.getResultPath({ path: `${Date.now()}-thumbnail` });
+      console.log("resultPathResponse", resultPathResponse);
       try {
         const payload = {
-          resultPath: "",
+          resultPath: resultPathResponse.resultPath,
           videoUri: JSON.stringify(safeFirstSelected),
           config: JSON.stringify(defaultConfig),
         };
@@ -132,9 +136,11 @@ function VideoComponent() {
       if (!safeFirstSelected) return;
 
       try {
+        const resultPathResponse = await TruvideoSdkVideo.getResultPath({ path: `${Date.now()}-thumbnail` });
+        console.log("resultPathResponse", resultPathResponse);
         const payload = {
-          resultPath: "",
-          videoPath: JSON.stringify(safeFirstSelected),
+          resultPath: resultPathResponse.resultPath,
+          videoPath: safeFirstSelected,
         };
         const { result } = await TruvideoSdkVideo.cleanNoise(payload);
         console.log("Clean Noise Result:", result);
@@ -151,8 +157,11 @@ function VideoComponent() {
       if (!safeFirstSelected) return;
 
       try {
+        const resultPathResponse = await TruvideoSdkVideo.getResultPath({ path: `${Date.now()}-thumbnail` });
+        console.log("resultPathResponse", resultPathResponse);
+
         const payload = {
-          resultPath: "",
+          resultPath: resultPathResponse.resultPath,
           videoPath: safeFirstSelected,
           config: JSON.stringify(defaultConfig),
         };
@@ -171,8 +180,10 @@ function VideoComponent() {
       if (!safeFirstSelected) return;
 
       try {
+        const resultPathResponse = await TruvideoSdkVideo.getResultPath({ path: `${Date.now()}-thumbnail` });
+        console.log("resultPathResponse", resultPathResponse);
         const payload = {
-          resultPath: "",
+          resultPath: resultPathResponse.resultPath,
           videoUris: JSON.stringify(selectedVideos),
         };
         const { result } = await TruvideoSdkVideo.concatVideos(payload);
@@ -188,10 +199,10 @@ function VideoComponent() {
 
     async getVideoInfo() {
       if (!safeFirstSelected) return;
-
       try {
         const payload = { videoPath: JSON.stringify(safeFirstSelected) };
         const { result } = await TruvideoSdkVideo.getVideoInfo(payload);
+        toast.success('Get Video Info successfully!');
         console.log("Get Video Info Response:", result);
       } catch (error) {
         console.error("❌ Failed to Get Video Info:", error);
@@ -204,6 +215,25 @@ function VideoComponent() {
 
   return (
     <div style={styles.container}>
+      <div style={{ marginBottom: 30 }} />
+
+      {/* Back Button */}
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
+        <button
+          onClick={() => window.history.back()}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#3490CA',
+            color: 'white',
+            border: 'none',
+            borderRadius: 8,
+            cursor: 'pointer',
+            fontSize: 16,
+          }}
+        >
+          ← Back
+        </button>
+      </div>
       <div style={{ marginBottom: 30 }} />
 
       {uploadedVideos.length > 0 ? (
@@ -333,48 +363,5 @@ const styles = {
   },
 };
 
-
-
-
-// return (
-//   <div className="video-list">
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     {uploadedVideos.length > 0 ? (
-//       <>
-//       {uploadedVideos.map((url, index) => (
-//           <div key={index} className="video-item" style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-//             <input
-//               type="checkbox"
-//               checked={selectedVideos.includes(url)}
-//               onChange={() => handleCheckboxChange(url)}
-//               style={{ marginRight: '10px' }}
-//             />
-//             {/* <video src={url} controls width="30" height="40" /> */}
-//             <span>{url}</span>
-
-//           </div>
-//         ))}
-
-//         {/* Action Buttons */}
-//         <div className="video-actions" style={{ marginTop: '20px' }}>
-//           <button onClick={apiHandlers.mergeVideos}>Merge Videos</button>
-//           <button onClick={apiHandlers.compareVideos}>Compare Videos</button>
-//           <button onClick={apiHandlers.generateThumbnail}>Generate Thumbnail</button>
-//           <button onClick={apiHandlers.encodeVideo}>Encode Video</button>
-//           <button onClick={apiHandlers.cleanNoise}>Clean Noise</button>
-//           <button onClick={apiHandlers.editVideo}>Edit Video</button>
-//           <button onClick={apiHandlers.concatVideos}>Concat Videos</button>
-//           <button onClick={apiHandlers.getVideoInfo}>Get Video Info</button>
-//         </div>
-//       </>
-//     ) : (
-//       <p>No videos available.</p>
-//     )}
-//   </div>
-// );
-// }
 
 export default VideoComponent

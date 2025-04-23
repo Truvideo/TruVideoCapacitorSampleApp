@@ -27,9 +27,8 @@ function HomeComponent() {
     const onUploadError = TruvideoSdkMedia.addListener("onError", (event) => {
       console.error(`❌ Upload Error for file ${event.id}:`, event.error);
     });
-
     const onUploadComplete = TruvideoSdkMedia.addListener("onComplete", (event) => {
-      console.log(`✅ Upload Complete for file ${event.id}:`, event.response.remoteUrl);
+      console.log(`Upload Complete for fileeventn  ${event.id}:`, event)
     });
 
     return () => {
@@ -42,8 +41,8 @@ function HomeComponent() {
 
   useEffect(() => {
     auth();
-    const savedImages = JSON.parse(localStorage.getItem('uploadedImages') || '[]');
-    const savedVideos = JSON.parse(localStorage.getItem('uploadedVideos') || '[]');
+    const savedImages = JSON.parse(sessionStorage.getItem('uploadedImages') || '[]');
+    const savedVideos = JSON.parse(sessionStorage.getItem('uploadedVideos') || '[]');
 
     setUploadedImages(savedImages);
     setUploadedVideos(savedVideos);
@@ -57,7 +56,6 @@ function HomeComponent() {
 
       const isAuth = await TruVideoSdkCore.isAuthenticated();
 
-      // console.log('isAuth', isAuth.authenticate);
       // Check if authentication token has expired
       const isAuthExpired = await TruVideoSdkCore.isAuthenticationExpired();
       console.log('isAuthExpired', isAuthExpired.isAuthenticationExpired);
@@ -124,19 +122,20 @@ function HomeComponent() {
       let mediaItems = []
 
       const response = await TruvideoSdkCamera.initCameraScreen({ configuration: jsonString });
-      console.log("📸 Captured Image Path:", response.result);
+      console.log("📸 Captured Image Path:", response);
       const resultData = response.result;
-
+      console.log("📸 resultData :", response.result);
       if (typeof resultData === "string") {
         try {
           mediaItems = JSON.parse(resultData);
-          console.log("✅ Parsed mediaItems:", mediaItems);
+          console.log("✅ Parsed mediaItems:", mediaItems.result);
         } catch (error) {
           console.error("❌ Failed to parse response.result:", error);
         }
       } else if (Array.isArray(resultData)) {
         mediaItems = resultData;
       }
+      console.log("media Items ", mediaItems);
 
       const tag = {
         key: "value",
@@ -158,8 +157,7 @@ function HomeComponent() {
               console.warn("Skipping item without filePath:", item);
               continue;
             }
-            console.log("item", item.filePath);
-            const payload = {
+             const payload = {
               filePath: item.filePath,
               tag: JSON.stringify(tag),
               metaData: JSON.stringify(metaData),
@@ -169,59 +167,44 @@ function HomeComponent() {
 
             console.log("uploadMedia Response (full):", JSON.stringify(uploadMediaResponse, null, 2));
 
-            let parsedResponse = {};
-            try {
-              parsedResponse = JSON.parse(uploadMediaResponse?.response || '{}');
-              console.log("✅ Parsed Response:", parsedResponse);
-            } catch (error) {
-              console.error("❌ Failed to parse uploadMedia response:", error);
-            }
-
             //Now get the remoteUrl
-            const url = parsedResponse.filePath ?? parsedResponse.filePath;
-            const type = parsedResponse.type; //
-
-            console.log("✅ Upload Completed. URL:", url, "Type:", type);
-
+            const url = item?.filePath;
+            const type = item?.type;
 
             if (url) {
-              setUploadedImages((prevImages) => [...prevImages, url]);
               if (type === "VIDEO") {
                 videoUrls.push(url);
-              } else if (type === "IMAGE") {
+              } else if (type === "PICTURE" || type === "IMAGE") {
                 imageUrls.push(url);
               } else {
                 console.warn("Unknown media type:", type);
               }
-              mediaUrls.push(url); // if you still want to keep a combined list
+              mediaUrls.push(url); 
             } else {
-              console.error("❌ Upload failed: No URL found in parsed response", parsedResponse);
+              console.error("❌ Upload failed", uploadMediaResponse);
             }
           } catch (uploadError) {
             console.error("❌ Upload failed for:", item.filePath, uploadError);
           }
         }
         setIsUploaded("Upload Success")
-        console.log("All mediaUrls:", mediaUrls);
         console.log("Video URLs:", videoUrls);
         console.log("Image URLs:", imageUrls);
         setUploadedVideos(videoUrls);
-        setUploadedImages(mediaUrls)
+        setUploadedImages(imageUrls)
 
+        
         // Setting up Images 
-        const previousImages = JSON.parse(localStorage.getItem('uploadedImages') || '[]');
+        const previousImages = JSON.parse(sessionStorage.getItem('uploadedImages') || '[]');
         const updatedImages = [...previousImages, ...imageUrls];
         setUploadedImages(updatedImages);
-        localStorage.setItem('uploadedImages', JSON.stringify(updatedImages));
-
+        sessionStorage.setItem('uploadedImages', JSON.stringify(updatedImages));
+        
         // Setting up Videos
-        const previousVideos = JSON.parse(localStorage.getItem('uploadedVideos') || '[]');
+        const previousVideos = JSON.parse(sessionStorage.getItem('uploadedVideos') || '[]');
         const updatedVideos = [...previousVideos, ...videoUrls];
-
         setUploadedVideos(updatedVideos);
-        localStorage.setItem('uploadedVideos', JSON.stringify(updatedVideos));
-
-
+        sessionStorage.setItem('uploadedVideos', JSON.stringify(updatedVideos));
 
       } else {
         console.error("❌ Camera Upload Failed: mediaItems is not an array.");

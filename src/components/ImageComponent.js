@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';  // 👈 Import to receive data
 import { TruvideoSdkCamera } from 'truvideo-capacitor-camera-sdk';
 import { TruvideoSdkImage } from 'truvideo-capacitor-image-sdk'
 import { toast } from 'react-toastify';
+import { TruvideoSdkVideo } from 'truvideo-capacitor-video-sdk';
 
 function ImageComponent() {
   const [uploadedImages, setUploadedImages] = useState([]);
@@ -19,7 +20,7 @@ function ImageComponent() {
   }, []);
 
   useEffect(() => {
-    const savedImages = JSON.parse(localStorage.getItem('uploadedImages') || '[]');
+    const savedImages = JSON.parse(sessionStorage.getItem('uploadedImages') || '[]');
     setUploadedImages(savedImages);
   }, []);
 
@@ -29,10 +30,13 @@ function ImageComponent() {
     if (!selectedImages[0]) return;
 
     try {
+      const resultPathResponse = await TruvideoSdkVideo.getResultPath({ path: `${Date.now()}-thumbnail` });
+
       const payload = {
         inputPath: selectedImages[0],
-        outputPath: ""
+        outputPath: resultPathResponse.resultPath,
       };
+
       const { result } = await TruvideoSdkImage.editImage(payload);
       console.log("Edit Image Response:", result);
     } catch (error) {
@@ -51,6 +55,27 @@ function ImageComponent() {
   };
   return (
     <div style={styles.container}>
+      <div style={{ marginBottom: 30 }} />
+
+      {/* Back Button */}
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
+        <button
+          onClick={() => window.history.back()}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#3490CA',
+            color: 'white',
+            border: 'none',
+            borderRadius: 8,
+            cursor: 'pointer',
+            fontSize: 16,
+          }}
+        >
+          ← Back
+        </button>
+      </div>
+      <div style={{ marginBottom: 30 }} />
+
       {uploadedImages.length > 0 ? (
         <>
           {uploadedImages.map((url, index) => (
