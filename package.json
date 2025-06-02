@@ -19,6 +19,7 @@
     "react-router-dom": "^5.3.4",
     "react-scripts": "5.0.1",
     "react-toastify": "^11.0.5",
+    "sdk": "^0.5.0",
     "truvideo-capacitor-camera-sdk": "github:Truvideo/TruVideoCapacitorCameraSdk",
     "truvideo-capacitor-core-sdk": "github:Truvideo/TruVideoCapacitorCoreSdk",
     "truvideo-capacitor-image-sdk": "github:Truvideo/TruVideoCapacitorImageSdk",

@@ -125,7 +125,7 @@ function HomeComponent() {
 
       if (typeof resultData === "string") {
         try {
-          mediaItems = JSON.parse(resultData).result || [];
+          mediaItems = JSON.parse(resultData) || [];
         } catch (error) {
           console.error("Failed to parse camera response:", error);
         }
@@ -137,7 +137,7 @@ function HomeComponent() {
         console.error("Camera Upload Failed: mediaItems is not an array.");
         return;
       }
-
+      console.log("mediaItems", mediaItems);
       const videoUrls = [];
       const imageUrls = [];
 
@@ -178,7 +178,8 @@ function HomeComponent() {
       const updatedVideos = [...previousVideos, ...videoUrls];
       setUploadedVideos(updatedVideos);
       sessionStorage.setItem('uploadedVideos', JSON.stringify(updatedVideos));
-
+      console.log("updatedVideos", updatedVideos);
+      console.log("updatedImages", updatedImages);
       toast.success('Upload successful!');
     } catch (error) {
       console.error("Camera error:", error);
